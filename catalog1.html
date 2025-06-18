@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог венков - Вечная Память</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-seedling"></i>
+                    <h1>Вечная Память</h1>
+                </a>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Главная</a>
+                    <a href="catalog.html" class="nav-link active">Каталог</a>
+                    <a href="index.html#about" class="nav-link">О нас</a>
+                    <a href="index.html#contacts" class="nav-link">Контакты</a>
+                </nav>
+                <div class="contact-info">
+                    <i class="fas fa-phone"></i>
+                    <span>+375 29 888-21-52</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Panel for Adding Photos -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="container">
+            <div class="admin-header">
+                <h2><i class="fas fa-cog"></i> Управление каталогом</h2>
+                <button class="btn btn-outline" onclick="toggleAdminPanel()">
+                    <i class="fas fa-eye-slash"></i> Скрыть панель
+                </button>
+            </div>
+            
+            <!-- Add New Wreath Form -->
+            <div class="add-wreath-form">
+                <h3><i class="fas fa-plus"></i> Добавить новый венок</h3>
+                <form id="addWreathForm" class="wreath-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="wreathName">Название венка:</label>
+                            <input type="text" id="wreathName" required placeholder="Например: Венок-сердце с розами">
+                        </div>
+                        <div class="form-group">
+                            <label for="wreathPrice">Цена (₽):</label>
+                            <input type="number" id="wreathPrice" required placeholder="5000">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="wreathCategory">Категория:</label>
+                            <select id="wreathCategory" required>
+                                <option value="">Выберите категорию</option>
+                                <option value="Элитные">Элитные</option>
+                                <option value="Классические">Классические</option>
+                                <option value="Традиционные">Традиционные</option>
+                                <option value="Сезонные">Сезонные</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="wreathRating">Рейтинг:</label>
+                            <select id="wreathRating" required>
+                                <option value="5">5 звезд</option>
+                                <option value="4">4 звезды</option>
+                                <option value="3">3 звезды</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="wreathDescription">Описание:</label>
+                        <textarea id="wreathDescription" required placeholder="Подробное описание венка..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="wreathImage">Фотография венка:</label>
+                        <div class="image-upload-area" onclick="document.getElementById('wreathImage').click()">
+                            <div class="upload-placeholder" id="uploadPlaceholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Нажмите для выбора фотографии</p>
+                                <small>JPG, PNG до 5MB</small>
+                            </div>
+                            <img id="imagePreview" class="image-preview" style="display: none;">
+                        </div>
+                        <input type="file" id="wreathImage" accept="image/*" style="display: none;" onchange="previewImage(this)">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Добавить венок
+                    </button>
+                </form>
+            </div>
+
+            <!-- Edit Existing Wreaths -->
+            <div class="edit-wreaths-section">
+                <h3><i class="fas fa-edit"></i> Редактировать существующие венки</h3>
+                <div class="wreaths-list" id="wreathsList">
+                    <!-- Список венков для редактирования будет здесь -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Show/Hide Admin Panel Button -->
+    <div class="admin-toggle" id="adminToggle">
+        <button class="btn btn-primary" onclick="toggleAdminPanel()">
+            <i class="fas fa-cog"></i> Управление каталогом
+        </button>
+    </div>
+
+    <!-- Catalog Page -->
+    <div class="catalog-page">
+        <div class="container">
+            <h1 class="page-title">Каталог венков</h1>
+
+            <!-- Filters -->
+            <div class="filters">
+                <div class="filters-header">
+                    <i class="fas fa-filter"></i>
+                    <h2>Фильтры</h2>
+                </div>
+                <div class="filters-content">
+                    <div class="filter-group">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Поиск венков...">
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <select id="categoryFilter">
+                            <option value="all">Все категории</option>
+                            <option value="Классические">Классические</option>
+                            <option value="Элитные">Элитные</option>
+                            <option value="Традиционные">Традиционные</option>
+                            <option value="Сезонные">Сезонные</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <select id="priceFilter">
+                            <option value="all">Любая цена</option>
+                            <option value="low">До 3000 ₽</option>
+                            <option value="medium">3000 - 5000 ₽</option>
+                            <option value="high">От 5000 ₽</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results count -->
+            <div class="results-count">
+                <p id="resultsCount">Загрузка каталога...</p>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="catalog-grid" id="catalogGrid">
+                <!-- Здесь будут отображаться карточки венков -->
+            </div>
+
+            <!-- Call to Action -->
+            <div class="cta-section">
+                <h3>Не нашли подходящий венок?</h3>
+                <p>Мы изготовим венок по вашим индивидуальным пожеланиям</p>
+                <a href="tel:+375298882152" class="btn btn-primary">
+                    <i class="fas fa-phone"></i>
+                    Заказать индивидуальный венок
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-seedling"></i>
+                        <h4>Вечная Память</h4>
+                    </div>
+                    <p>Качественные траурные венки и композиции. Работаем с 2008 года.</p>
+                </div>
+                <div class="footer-section">
+                    <h5>Услуги</h5>
+                    <ul>
+                        <li>Траурные венки</li>
+                        <li>Композиции из живых цветов</li>
+                        <li>Искусственные венки</li>
+                        <li>Доставка</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h5>Контакты</h5>
+                    <ul>
+                        <li>+375 29 888-21-52</li>
+                        <li>ritualvenok1985@gmail.com</li>
+                        <li>г. Гродно, ул. Брикеля, 13, 230008</li>
+                        <li>Пн-Сб: 9:00-19:00, Вс - выходной</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Вечная Память. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="data1.js"></script>
+    <script src="catalog-manager.js"></script>
+    <script src="catalog1.js"></script>
+</body>
+</html>
